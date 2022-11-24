@@ -34,9 +34,9 @@ let commands = [];
 const slashFiles = fs.readdirSync('./slash').filter(file => file.endsWith('.js'));
 
 for (const file of slashFiles) {
-    const slashcmd = require(`./slash/${file}`);
-    client.slashCommands.set(slashcmd.data.name, slashcmd);
-    if (LOAD_SLASH) commands.push(slashcmd.data.toJSON());
+    const slashCmd = require(`./slash/${file}`);
+    client.slashCommands.set(slashCmd.data.name, slashCmd);
+    if (LOAD_SLASH) commands.push(slashCmd.data.toJSON());
 }
 
 if (LOAD_SLASH) {
@@ -65,10 +65,10 @@ if (LOAD_SLASH) {
         async function handleCommand () {
             if (!interaction.isCommand()) return;
 
-            const slashcmd = client.slashCommands.get(interaction.commandName);
-            if (!slashcmd) interaction.reply("Command not found");
+            const slashCmd = client.slashCommands.get(interaction.commandName);
+            if (!slashCmd) interaction.reply("Command not found");
             await interaction.deferReply();
-            await slashcmd.run({client, interaction});
+            await slashCmd.run({client, interaction});
         }
         handleCommand();
 });
