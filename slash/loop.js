@@ -1,38 +1,30 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("loop")
-        .setDescription("Repite la canción actual o la cola")
+        .setDescription("Loops the current song or queue")
         .addSubcommand((subcommand) =>
             subcommand
                 .setName("song")
-                .setDescription("Repite la canción actual")
+                .setDescription("Loops the current song")
         )
         .addSubcommand((subcommand) =>
             subcommand
                 .setName("queue")
-                .setDescription("Repite la cola")
-        )
-        .addSubcommand((subcommand) =>
-            subcommand
-                .setName("off")
-                .setDescription("Desactiva el loop")
+                .setDescription("Loops the current queue")
         ),
     run: async ({ client, interaction }) => {
         const queue = client.player.getQueue(interaction.guildId)
 
-        if (!queue) return await interaction.editReply("No hay canciones en la cola")
+        if (!queue) return await interaction.editReply("There are no songs in the queue")
 
         if (interaction.options.getSubcommand() === "song") {
-            await queue.setRepeatMode(1)
-            await interaction.editReply("Repetición de canción activada")
+            queue.setRepeatMode(1)
+            await interaction.editReply("Song looped")
         } else if (interaction.options.getSubcommand() === "queue") {
-            await queue.setRepeatMode(2)
-            await interaction.editReply("Repetición de cola activada")
-        } else if (interaction.options.getSubcommand() === "off") {
-            await queue.setRepeatMode(0)
-            await interaction.editReply("Repetición desactivada")
+            queue.setRepeatMode(2)
+            await interaction.editReply("Queue looped")
         }
     }
 }
