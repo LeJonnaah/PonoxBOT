@@ -16,5 +16,19 @@ module.exports = {
                 new EmbedBuilder().setDescription(`${currentSong.title} has been skipped!`).setThumbnail(currentSong.thumbnail)
             ]
         })
+
+        const song = queue.current
+        let bar = queue.createProgressBar({
+            queue: false,
+            length: 19,
+        })
+
+        await interaction.followUp({
+            embeds: [new EmbedBuilder()
+                .setThumbnail(song.thumbnail)
+                .setDescription(`Currently Playing [${song.title}](${song.url})\n\n` + bar)
+                .setFooter({ text: `Duration: ${song.duration}`})
+            ],
+        })
 	},
 }

@@ -92,11 +92,13 @@ module.exports = {
             queue: false,
             length: 19,
         })
-        
+
         await interaction.followUp({
             embeds: [new EmbedBuilder()
                 .setThumbnail(song.thumbnail)
                 .setDescription(`Currently Playing [${song.title}](${song.url})\n\n` + bar)
+                .setFooter(`Requested by ${song.requestedBy.tag}`)
+                .setFooter({ text: `Duration: ${song.duration}`})
             ],
         })
 	}
