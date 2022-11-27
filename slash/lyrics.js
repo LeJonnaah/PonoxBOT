@@ -1,18 +1,27 @@
-const { SlashCommandBuilder } = require("@discordjs/builders");
+const { SlashCommandBuilder } = require("@discordjs/builders")
+const { EmbedBuilder } = require("discord.js")
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("lyrics")
-        .setDescription("Shows the lyrics of the current song"),
+        .setDescription("Displays lyrics for the currently playing song")
+        .addStringOption((option) =>
+            option.setName("song").setDescription("The song to search for").setRequired(false)
+        ),
     run: async ({ client, interaction }) => {
         const queue = client.player.getQueue(interaction.guildId)
 
         if (!queue) return await interaction.editReply("There are no songs in the queue")
 
-        const lyrics = await client.player.lyrics(queue.current.title)
+        const song = queue.current
 
-        if (!lyrics) return await interaction.editReply("No lyrics found")
+        const lyrics = await client.player.lyrics(song.title)
 
-        await interaction.editReply(lyrics)
-    }
+        await interaction.editReply({
+            embeds: [new EmbedBuilder()
+                .setTitle(song.title)
+                .setDescription(lyrics)
+            ],
+        })
+    },
 }
